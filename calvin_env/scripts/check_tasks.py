@@ -44,7 +44,6 @@ def run_env(cfg):
     for s, e in ep_start_end_ids:
         i = s
         while 1:
-
             file = root_dir / f"episode_{i:07}.npz"
             data = np.load(file)
             # gripper_img = data["rgb_gripper"]

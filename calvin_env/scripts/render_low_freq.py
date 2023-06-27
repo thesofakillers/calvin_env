@@ -42,7 +42,6 @@ for subdir in ["training", "validation"]:
     new_ep_start_end_ids = []
 
     for start, end in tqdm(ep_start_end_ids):
-
         ep_len = end - start + 1
         for offset in (0, 1):
             new_start = new_i
