@@ -175,6 +175,8 @@ def to_relative_action(actions, robot_obs, max_pos=0.02, max_orn=0.05):
 
 
 def set_egl_device(device, egl_dir_path: Optional[str] = None):
+    if device.type == "cpu":
+        return
     assert "EGL_VISIBLE_DEVICES" not in os.environ, "Do not manually set EGL_VISIBLE_DEVICES"
     try:
         cuda_id = device.index if device.type == "cuda" else 0
