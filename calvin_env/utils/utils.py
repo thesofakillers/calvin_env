@@ -6,7 +6,7 @@ import pickle
 import re
 import subprocess
 import time
-from typing import Union
+from typing import Union, Optional
 
 import git
 import numpy as np
@@ -123,14 +123,15 @@ class EglDeviceNotFoundError(Exception):
     """Raised when EGL device cannot be found"""
 
 
-def get_egl_device_id(cuda_id: int) -> Union[int]:
+def get_egl_device_id(cuda_id: int, dir_path: Optional[str] = None) -> int:
     """
     >>> i = get_egl_device_id(0)
     >>> isinstance(i, int)
     True
     """
     assert isinstance(cuda_id, int), "cuda_id has to be integer"
-    dir_path = Path(__file__).absolute().parents[2] / "egl_check"
+    if dir_path is None:
+        dir_path = Path(__file__).absolute().parents[2] / "egl_check"
     if not os.path.isfile(dir_path / "EGL_options.o"):
         if os.environ.get("LOCAL_RANK", "0") == "0":
             print("Building EGL_options.o")
@@ -171,14 +172,14 @@ def to_relative_action(actions, robot_obs, max_pos=0.02, max_orn=0.05):
     return np.concatenate([rel_pos, rel_orn, gripper])
 
 
-def set_egl_device(device):
+def set_egl_device(device, egl_dir_path: Optional[str] = None):
     assert "EGL_VISIBLE_DEVICES" not in os.environ, "Do not manually set EGL_VISIBLE_DEVICES"
     try:
         cuda_id = device.index if device.type == "cuda" else 0
     except AttributeError:
         cuda_id = device
     try:
-        egl_id = get_egl_device_id(cuda_id)
+        egl_id = get_egl_device_id(cuda_id, egl_dir_path)
     except EglDeviceNotFoundError:
         logger.warning(
             "Couldn't find correct EGL device. Setting EGL_VISIBLE_DEVICE=0. "
