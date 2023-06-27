@@ -264,12 +264,14 @@ class PlayTableSimEnv(gym.Env):
         return data
 
 
-def get_env(dataset_path, obs_space=None, show_gui=True, **kwargs):
+def get_env(dataset_path, urdf_data_dir, obs_space=None, show_gui=True, use_egl=True, **kwargs):
     from pathlib import Path
 
     from omegaconf import OmegaConf
 
     render_conf = OmegaConf.load(Path(dataset_path) / ".hydra" / "merged_config.yaml")
+    render_conf.data_path = urdf_data_dir
+    render_conf.env.use_egl = use_egl
 
     if obs_space is not None:
         exclude_keys = set(render_conf.cameras.keys()) - {
@@ -292,8 +294,7 @@ def run_env(cfg):
 
     env.reset()
     while True:
-        action = {"action": np.array((0., 0, 0, 0, 0, 0, 1)),
-                  "type": "cartesian_rel"}
+        action = {"action": np.array((0.0, 0, 0, 0, 0, 0, 1)), "type": "cartesian_rel"}
         # cartesian actions can also be input directly as numpy arrays
         # action = np.array((0., 0, 0, 0, 0, 0, 1))
 
