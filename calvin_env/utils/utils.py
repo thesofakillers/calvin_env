@@ -132,6 +132,8 @@ def get_egl_device_id(cuda_id: int, dir_path: Optional[str] = None) -> int:
     assert isinstance(cuda_id, int), "cuda_id has to be integer"
     if dir_path is None:
         dir_path = Path(__file__).absolute().parents[2] / "egl_check"
+    else:
+        dir_path = Path(dir_path)
     if not os.path.isfile(dir_path / "EGL_options.o"):
         if os.environ.get("LOCAL_RANK", "0") == "0":
             print("Building EGL_options.o")
