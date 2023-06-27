@@ -29,6 +29,8 @@ class PlayLMPWrapper(gym.Wrapper):
 
     @staticmethod
     def set_egl_device(device):
+        if device.type == "cpu":
+            pass
         if "EGL_VISIBLE_DEVICES" in os.environ:
             logger.warning("Environment variable EGL_VISIBLE_DEVICES is already set. Is this intended?")
         cuda_id = device.index if device.type == "cuda" else 0
