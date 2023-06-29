@@ -152,10 +152,10 @@ class PlayTableSimEnv(gym.Env):
         rgb_obs, depth_obs = self.get_camera_obs()
         if mode == "human":
             if "rgb_static" in rgb_obs:
-                img = rgb_obs["rgb_static"][:, :, ::-1]
+                img = rgb_obs["rgb_static"][:, :, ::-1].astype(np.uint8)
                 cv2.imshow("simulation cam", cv2.resize(img, (500, 500)))
             if "rgb_gripper" in rgb_obs:
-                img2 = rgb_obs["rgb_gripper"][:, :, ::-1]
+                img2 = rgb_obs["rgb_gripper"][:, :, ::-1].astype(np.uint8)
                 cv2.imshow("gripper cam", cv2.resize(img2, (500, 500)))
             cv2.waitKey(1)
         elif mode == "rgb_array":
